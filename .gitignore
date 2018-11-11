@@ -1,2 +1,18 @@
 # config
 */config/
+
+# python
+*/__pycache__/
+*.pyc
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+*.sqlite3
+
+
+# log
+*/log/
+*.log
