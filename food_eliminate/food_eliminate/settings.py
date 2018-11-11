@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Django settings for food_eliminate project.
 
@@ -11,6 +13,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import logging
+import django.utils.log
+import logging.handlers
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -120,3 +125,93 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# logging
+BASE_LOG_DIR = os.path.join(BASE_DIR, "log")
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'
+        },  # 日志格式
+        'simple': {
+            'format': '[%(levelname)s][%(asctime)s][%(filename)s:%(lineno)d]%(message)s'
+        },
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(filename)s %(lineno)d %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'default': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_LOG_DIR, "all.log"),  # 日志输出文件
+            'maxBytes': 1024*1024*500,  # 文件大小
+            'backupCount': 1,  # 备份份数
+            'formatter': 'verbose',  # 使用哪种formatters日志格式
+            'encoding': 'utf-8',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],  # 只有在Django debug为True时才在屏幕打印日志
+            'class': 'logging.StreamHandler',  #
+            'formatter': 'simple',
+        },
+        'debug': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_LOG_DIR, "debug.log"),
+            'maxBytes': 1024*1024*500,
+            'backupCount': 1,
+            'formatter': 'verbose',
+            'encoding': 'utf-8',
+        },
+        # 'error': {
+        #     'level': 'ERROR',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': os.path.join(BASE_LOG_DIR, "error.log"),
+        #     'maxBytes': 1024*1024*50,
+        #     'backupCount': 1,
+        #     'formatter': 'simple',
+        #     'encoding': 'utf-8',
+        # },
+        # 'info': {
+        #     'level': 'INFO',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': os.path.join(BASE_LOG_DIR, "info.log"),
+        #     'maxBytes': 1024*1024*50,
+        #     'backupCount': 1,
+        #     'formatter': 'simple',
+        #     'encoding': 'utf-8',
+        # },
+        # 'warning': {
+        #     'level': 'WARNING',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': os.path.join(BASE_LOG_DIR, "warning.log"),
+        #     'maxBytes': 1024*1024*50,
+        #     'backupCount': 1,
+        #     'formatter': 'simple',
+        #     'encoding': 'utf-8',
+        # }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['default', 'console'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'common': {
+            'handlers': ['debug'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+
+}
