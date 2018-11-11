@@ -3,7 +3,9 @@
 import pymysql
 from DBUtils.PooledDB import PooledDB, SharedDBConnection
 import configparser
+import logging
 
+logger = logging.getLogger(__name__)
 conf = configparser.ConfigParser()
 conf.read("config/mysql.conf")
 
@@ -36,54 +38,51 @@ class DB(object):
         conn.close()
 
     def fetch_all(self, sql):
-        print("fetch all sql: ", sql)
+        logger.info("fetch all sql: %s" % sql)
         conn, cursor = self.connect()
         try:
             cursor.execute(sql)
             record_list = cursor.fetchall()
             return record_list
         except Exception as e:
-            print('error: ', e)
+            logger.error("error: %s" % e)
             conn.rollback()
         finally:
             self.connect_close(conn, cursor)
 
     def fetch_one(self, sql):
-        print("fetch one sql: ", sql)
+        logger.info("fetch one sql: %s" % sql)
         conn, cursor = self.connect()
         try:
             cursor.execute(sql)
             result = cursor.fetchone()
             return result
         except Exception as e:
-            print('error: ', e)
+            logger.error("error: %s" % e)
             conn.rollback()
         finally:
             self.connect_close(conn, cursor)
 
     def insert(self, sql):
-        print("insert sql: ", sql)
+        logger.info("insert sql: %s" % sql)
         conn, cursor = self.connect()
         try:
             row = cursor.execute(sql)
             conn.commit()
             return row
         except Exception as e:
-            print('error: ', e)
+            logger.error("error: %s" % e)
         finally:
             self.connect_close(conn, cursor)
 
     def insert_many(self, sql, data_list):
-        print("insert sql: ", sql)
+        logger.info("insert many sql: %s" % sql)
         conn, cursor = self.connect()
         try:
             row = cursor.executemany(sql, data_list)
             conn.commit()
             return row
         except Exception as e:
-            print('error: ', e)
+            logger.error("error: %s" % e)
         finally:
             self.connect_close(conn, cursor)
-
-db = DB()
-db.connect()
