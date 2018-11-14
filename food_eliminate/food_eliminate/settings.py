@@ -208,11 +208,10 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True
         },
-        'common': {
+        '': {
             'handlers': ['debug'],
             'level': 'DEBUG',
             'propagate': False,
         },
     }
-
 }
