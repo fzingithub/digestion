@@ -18,11 +18,11 @@ class DB(object):
             mincached=2,  # 初始化时，链接池中至少创建的空闲的链接，0表示不创建
             maxcached=5,  # 链接池中最多闲置的链接，0和None不限制
             maxshared=3,
-            host=conf.get("mySQLDB", "dbhost"),
-            port=int(conf.get("mySQLDB", "dbport")),
-            db=conf.get("mySQLDB", "dbname"),
-            user=conf.get("mySQLDB", "dbuser"),
-            password=conf.get("mySQLDB", "dbpassword"),
+            host=conf.get("mySQLDB", "host"),
+            port=int(conf.get("mySQLDB", "port")),
+            db=conf.get("mySQLDB", "name"),
+            user=conf.get("mySQLDB", "user"),
+            password=conf.get("mySQLDB", "password"),
             charset="utf8",
         )
         return pool
